@@ -1,0 +1,167 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Add title  -->
+    <title>Register</title>
+
+    <!-- vendor css  -->
+    <link href="{% static 'Home/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'Home/global.css' %}">
+</head>
+
+<body class="d-flex align-items-center align-content-center align-self-center">
+    <div class="d-flex container" >
+        <div class="text-center mt-5 mb-5">
+
+            <div class="card card0 border-0 d-flex align-items-center align-content-center align-self-center">
+
+                <div class="row d-flex align-items-center align-content-center align-self-center">
+                    <!-- register welcome area -->
+                    <div class="col-lg-6">
+                        <div class="card card0 register-intro h-100 justify-content-center pt-5 pb-5">
+                            <div class="row m-3">
+                                <div class="col-md-12"><h2>Almost there!</h2></div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-12 px-5">
+                                    EventHub gives you the ability to view and join events around the country.
+                                    Univeristies, RSOs, and public events are all supported.
+                                    Join to get started!
+                                </div>
+                            </div>
+                            <div class="row px-2 py-2 mb-3">
+                                <div class="col-md-12 align-self-center">
+                                    <!-- navigation -->
+                                    <div class="card card2  border-0 w-100 align-self-center">
+                                        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student-register" role="tab" aria-controls="student-register" aria-selected="true">Student</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="faculty-tab" data-toggle="tab" href="#faculty-register" role="tab" aria-controls="faculty-register" aria-selected="false">Faculty</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /.navigation -->
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.register welcome area -->
+                    <!-- register page -->
+                    <div class="col-lg-6">
+                        <div class="card card2 login-forms bg-transparent border-0 px-4 py-4 h-100">
+                            <div class="row mb-4 px-3 justify-content-center">
+                                <div class="col-lg-12 text-blk">
+                                </div>
+                            </div>
+                            <div class="tab-content" id="myTabContent">
+                                <!-- student register -->
+                                <div class="tab-pane fade show active" id="student-register" role="tabpanel" aria-labelledby="student-tab">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="row px-3">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <input id="studentFirstName" class="form-control mb-4" type="text" name="userFirstName" placeholder="First Name" style="color:black" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <input id="studentLastName" class="form-control mb-4" type="text" name="userLastName" placeholder="Last Name" style="color:black" required/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-3">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <input id="studentEmail" class="form-control mb-4" type="text" name="userEmail" placeholder="Email" style="color:black !important;" required/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-3">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <input id="username" class="form-control mb-4" type="text" name="userUsername" placeholder="Username" style="color:black" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-3">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <input id="password" class="form-control" type="password" name="userPassword" placeholder="Password" style="color:black" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 px-3"><div class="col-lg-12"><button type="submit" name = "UserRegisterButton" value = "UserRegister" class="btn btn-primary btn-block mb-4">Register</button></div></div>
+                                        <div class="row mb-4 px-3"><div class="col-lg-12"><small class="float-left">Already a User? <a href="../../Users/login" class="text-orng">Login</a></small></div></div>
+                                    </form>
+                                </div>
+                                <!-- /.student register -->
+                                <!-- faculty register -->
+                                <div class="tab-pane fade" id="faculty-register" role="tabpanel" aria-labelledby="faculty-tab">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="row px-3">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <input id="facultyFirstName" class="form-control mb-4" type="text" name="facultyFirstName" placeholder="First Name" required style="color:black"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <input id="facultyLastName" class="form-control mb-4" type="text" name="facultyLastName" placeholder="Last Name" required style="color:black"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-3">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <input id="facultyEmail" class="form-control mb-4" type="text" name="facultyEmail" placeholder="Email" required style="color:black"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-3">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <input id="facultyUsername" class="form-control mb-4" type="text" name="facultyUsername" placeholder="Username" required style="color:black"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-3">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <input id="facultyPassword" class="form-control" type="password" name="facultyPassword" placeholder="Password" required style="color:black" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 px-3"><div class="col-lg-12"><button type="submit" name = "SuperUserRegisterButton" value = "SuperUserRegister" class="btn btn-primary btn-block mb-4">Register</button></div></div>
+                                        <div class="row mb-4 px-3"><div class="col-lg-12"><small class="float-left">Already a User?<a href="../../Users/login" class="text-orng">Login</a></small></div></div>
+                                    </form>
+                                </div>
+                                <!-- /.faculty register -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.register page -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- JS -->
+<!-- vendor JS -->
+<script src="{% static 'Home/vendor/jquery/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'Home/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>

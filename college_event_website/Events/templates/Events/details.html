@@ -1,0 +1,446 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Add title  -->
+    <title>Event Details</title>
+
+    <!-- fb open graphs -->
+    <meta property="og:url"           content="https://localhost://Events/{{ event.id }}" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="College Event: {{ event.name }}" />
+    <meta property="og:description"   content="{{ event.description }}" />
+
+    <!-- vendor css  -->
+    <link href="{% static 'Home/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'Events/main.css' %}">
+
+    <!-- facebook sdk -->
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0" nonce="jOG6UFvu"></script>
+</head>
+
+
+<body class="bg-gray1">
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">EventHub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- main links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% if user.is_admin == True or user.is_super_admin == True %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarEventDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        View Events
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/Events/">View Events</a>
+                        {% if user.is_admin == True %}
+                        <a class="dropdown-item" href="/Events/create">Create Event</a>
+                        {% endif %}
+                        {% if user.is_super_admin == True %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/Events/approve">Approve Events</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/Events/">View Events</a>
+                </li>
+                {% endif %}
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarRSODropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Registered Student Oganizations
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/RSO/">View RSOs</a>
+                        <a class="dropdown-item" href="/RSO/inactiveRsos">View Inactive RSOs</a> 
+                        <a class="dropdown-item" href="/RSO/create">Create RSO</a>
+                    </div>
+                </li>
+
+                {% if user.is_super_admin == True %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarRSODropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Universities
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/Universities/">View Universities</a>
+                            <a class="dropdown-item" href="/Universities/create">Create University</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Universities/">Universities</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/Users/profile">Profile</a>
+                </li>
+            </ul>
+        </div>
+        <!-- logout link -->
+        <a class="btn btn-primary me-3" href="../../Users/logout">Logout</a>
+    </nav>
+    <!-- /.navbar -->
+
+    <div class="d-flex align-items-center align-content-center align-self-center ">
+        <div class="d-flex container" >
+            <div class="text-center mt-5 mb-5 w-100">
+                <!-- outer background -->
+                <div class="card card0 border-0 d-flex align-items-center align-content-center align-self-center w-100">
+                    <!-- event title -->
+                    <div class="row w-100 gradient-orange rounded-top">
+                        <div class="col-md-12">
+                            <h2 class="text-blk text-lg">{{ event.name }}</h2>
+                        </div>                             
+                    </div>
+                    <div class="row card card0 border-0 shadow-thick bg-black d-flex align-items-center align-content-center align-self-center w-100 rounded-bottom">
+                        <div class="row d-flex align-items-center align-content-center align-self-center ml-4 mr-4 mt-2 mb-4 w-100">
+                            <div class="w-100 ml-2 mr-2 mb-2">
+                                <!-- share post section -->
+                                <div class="row mb-1 ml-4 mr-3">
+                                    <!-- share to twitter -->
+                                    <div class="ml-2 mt-1">
+                                        <a href="https://twitter.com/intent/tweet?" class="twitter-hashtag-button" data-text="I&#39;m going to an event: {{ event.name }}!" data-lang="en" data-show-count="false">Tweet #button</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                                    </div>
+                                    <!-- share to facebook -->
+                                    <div class="ml-3">
+                                        <div class="fb-share-button" data-href="https://localhost:/Events/{{ event.id }}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flocalhost%2FEvents%2F{{ event.id }}%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                                    </div>
+                                </div>
+                                <!-- /.share post section -->
+                                <!-- event details -->
+                                <!-- date and times -->
+                                <div class="row mb-1 ml-3 mr-3">      
+                                    <!-- date -->                          
+                                    <div class="col-md-8">
+                                        <div class="d-flex w-100 justify-content-start">
+                                            <div class="font-weight-bold text-md text-left">
+                                                {{ event.date }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                              <!-- start and end time -->
+                                <div class="row mb-3 ml-3 mr-3">                                
+                                    <div class="col-md-6">
+                                        <div class="d-flex w-100 justify-content-start">
+                                            <div class="text-start">
+                                              {{ event.start_time }} - {{ event.end_time }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if event.university != null %}
+                                        <div class="col-md-6">
+                                            <div class="d-flex w-100 justify-content-end">
+                                                <div class="text-right">
+                                                    {{event.university}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- category and rating -->
+                                <div class="row mb-3 ml-3 mr-3">                                
+                                    <div class="col-md-6">
+                                        <div class="d-flex w-100 justify-content-start">
+                                            <div class="text-start">
+                                                Category: {{ event.category }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex w-100 justify-content-end">
+                                            <div class="w-75 text-right">
+                                                Rating: {{ rating }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- description -->
+                                <div class="row ml-3 mb-5">
+                                    <div class="col-md-12">
+                                        <div class="d-flex w-100 justify-content-start">
+                                            <div class="w-75  text-left">
+                                                {{ event.description }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                             
+
+                                <!-- map with university location -->
+                                <!-- header -->
+                                <div class="col-md-12">
+                                    <div class="d-flex w-100 justify-content-center">
+                                        <div class="text-md text-center">
+                                            Event Location Details
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- location -->
+                           
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="d-flex w-100 justify-content-center">
+                                            <div class="text-center">
+                                                {{ event.location }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="d-flex w-100 justify-content-center">
+                                            <div class="text-center">
+                                                {{ event.phone }} 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="d-flex w-100 justify-content-center">
+                                            <div class="text-center">
+                                                {{ event.email }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+              
+
+                                <!-- map -->
+                                <div id="map" class="ml-5 mt-5">
+                                    <iframe id="current_map"
+                                    src="https://maps.google.com/maps?q={{latitude}},{{longitude}}&hl=es;z=14&amp;output=embed"
+                                    width="550" height="300" style="border:0;" allowfullscreen="true" loading="lazy"></iframe>
+                                </div>
+
+
+
+                                <!-- comment section -->
+                                <div class="row mb-3">                                
+                                    <div class="col-md-12">
+                                        <div class="d-flex w-100 justify-content-center">
+                                            <div class="text-md text-center">
+                                                Comments:
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- make a comment -->
+                                <div class="row mb-3 ml-3 mb-3">                                
+                                    <div class="col-md-12">
+                                        <!-- trigger modal -->
+                                        <div class="d-flex w-100 justify-content-left">
+                                            <div class="text-left">
+                                                <a href="#commentModal" type="open-comment" data-toggle="modal" data-target="#commentModal">
+                                                    Rate and Comment
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Comment Form Modal -->
+                                        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <!-- prompt for comment and close button -->
+                                                    <div class="modal-header">
+                                                        <h2 class="modal-title" id="commentModalLabel">Share your feedback</h2>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <!-- rating, comment, and submit -->
+                                                    <div class="modal-body">
+                                                        <form method="POST" class="w-100 m-2">
+                                                            {% csrf_token %}
+                                                            <div class="w-75 mb-5">
+                                                                <label class="sr-only" for="comment_rating">Rating</label>
+                                                                {{ form.rating|as_crispy_field }}
+                                                            </div>
+                                                            <div class="w-75">
+                                                                <label class="sr-only" for="comment_content">Content</label>
+                                                                {{ form.content|as_crispy_field }}
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" name="create-comment-btn" value="event_info" class="btn btn-primary me-3">Submit Comment</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ./make a comment -->
+
+                                <!-- trigger modal -->
+                                <div class="d-flex w-100 justify-content-start">
+                                    <div class="w-100 text-orng text-left">
+
+                                    </div>
+                                </div>
+                                
+
+                                <!-- list current comments -->
+                                {% for comment in comments %}
+                                <div class="row mb-3 ml-3 bg-gray2 ml-3 mr-3">                                
+                                    <div class="col-md-12 p-3">
+                                        <div class="row">
+                                            <!-- creation user's name -->
+                                            <div class="col-md-6">
+                                                <div class="d-flex w-100 justify-content-start">
+                                                    <div class="text-md texorngt- text-left">
+                                                        {{ comment.user }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- only shown if current user = creation user -->
+                                            <div class="col-md-6">
+                                                <div class="d-flex w-100 justify-content-end">
+                                                    
+                                                    {% if comment.user.id == user.id %}
+                                                        <!-- edit popup -->
+                                                        <div class="text-left pr-4">
+                                                            <a href="#editmodal" class="text-orng" type="open-comment" data-toggle="modal" data-target="#editModal">
+                                                                Edit
+                                                            </a>
+                                                        </div>
+                                                        <!-- edit comment modal -->
+
+                                                        <!-- Edit Comment Modal -->
+                                                        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editmodalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content bg-black">
+                                                                    <!-- prompt for comment edit and close button -->
+                                                                    <div class="modal-header">
+                                                                        <h2 class="modal-title text-orng" id="exampleModalLabel">Edit Your Comment</h2>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <!-- rating, comment, and submit -->
+                                                                    <div class="modal-body">
+                                                                        <form method="POST" class="w-100 m-2">
+                                                                            {% csrf_token %}
+                                                                            <!-- autofills with form rating -->
+                                                                            <div class="w-75 mb-5">
+                                                                                <label class="sr-only" for="comment_rating">Rating</label>
+                                                                                {{ form.rating|as_crispy_field }}
+                                                                            </div>
+                                                                            <!-- autofills with form comment -->
+                                                                            <div class="w-75">
+                                                                                <label class="sr-only" for="comment_content">Content</label>
+                                                                                {{ form.content|as_crispy_field }}
+                                                                            </div>
+                                                                            <button value="{{comment.id}}" type="submit" name="edit-comment-btn" value="event_info" class="btn gradient-orange float-right">Edit Comment</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- ./edit comment modal -->
+                                                    {% endif %}
+
+                                                    {% if comment.user.id == user.id %}
+                                                        <!-- delete popup -->
+                                                        <div class="text-orng text-right">
+                                                            <a class="text-orng" type="open-comment" data-toggle="modal" data-target="#deleteModal">
+                                                                Delete
+                                                            </a>
+                                                        </div>
+                                                        <!-- delete comment modal -->
+                                                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content bg-black">
+                                                                    <!-- prompt for comment edit and close button -->
+                                                                    <div class="modal-header">
+                                                                        <h2 class="modal-title text-orng" id="exampleModalLabel">Delete Comment?</h2>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <!-- rating, comment, and submit -->
+                                                                    <div class="modal-body">
+                                                                        <form method="POST" class="w-100 m-2">
+                                                                            {% csrf_token %}
+                                                                            <button value="{{comment.id}}" type="submit" name="delete-comment-btn" value="event_info" class="btn gradient-orange">Delete Comment</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.delete comment modal -->
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- show the users' rating and timestamp -->
+                                        <div class="row mb-3">
+                                            <!-- rating -->
+                                            <div class="col-md-6">
+                                                <div class="d-flex w-100 justify-content-start">
+                                                    <div class="w-100 text-blk text-left">
+                                                        Rating: {{ comment.rating }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- timestamp -->
+                                            <div class="col-md-6">
+                                                <div class="d-flex w-100 justify-content-end">
+                                                    <div class="w-100 text-blk text-right">
+                                                       {{ comment.date }} {{ comment.timestamp }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- show users comment -->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="d-flex w-100 justify-content-left">
+                                                    <div class="w-100 text-left">
+                                                        {{ comment.content }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <!-- ./list current comments -->
+                                <!-- ./comment section -->
+                            </div>
+                        </div>
+                        <!-- /.create event form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- JS -->
+<!-- vendor JS -->
+<script src="{% static 'Home/vendor/jquery/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'Home/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>
